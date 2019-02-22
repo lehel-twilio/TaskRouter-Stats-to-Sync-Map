@@ -4,7 +4,6 @@ const authToken = config.twilio.authToken;
 const interval = config.interval;
 const client = require('twilio')(accountSid, authToken);
 
-//writeStats(fetchStats());
 fetchStats();
 
 function fetchStats() {
@@ -12,7 +11,7 @@ function fetchStats() {
 
   const taskQueues = Object.keys(config.taskQueues);
   const workspace = config.twilio.workspace;
-  let stats = {foo: 'bar'};
+  let stats = {};
 
   if (typeof taskQueues === undefined) {
     console.log('No Task Queues defined');
@@ -40,10 +39,9 @@ function fetchStats() {
     let stats = {};
 
     taskQueueStatistics.forEach(function(taskQueueStatisticsInstance) {
-      console.log(config);
 
       stats[taskQueueStatisticsInstance.taskQueueSid] = {
-        name: config.taskQueues[taskQueueStatisticsInstance.taskQueueSid].name,
+        name: config.taskQueues[taskQueueStatisticsInstance.taskQueueSid],
         tasksWaiting: taskQueueStatisticsInstance.realtime.tasks_by_status.pending,
         activeTasks: taskQueueStatisticsInstance.realtime.total_tasks,
         longestWait: formatWaitTime(taskQueueStatisticsInstance.realtime.longest_task_waiting_age),
@@ -55,7 +53,6 @@ function fetchStats() {
       }
     })
 
-    console.log(stats);
     return stats;
   })
   .then(stats => {
